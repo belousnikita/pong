@@ -1,0 +1,42 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "Pong game made with React",
+  "main": "./src/index.jsx",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chern0us/pong.git"
+  },
+  "keywords": [
+    "pong",
+    "game",
+    "react"
+  ],
+  "author": "chern0us",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chern0us/pong/issues"
+  },
+  "homepage": "https://github.com/chern0us/pong#readme",
+  "dependencies": {
+    "bg-canvases": "^1.1.10",
+    "eslint-plugin-react": "^7.12.4",
+    "lodash": "^4.17.11",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react-scripts": "^2.1.5"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {}
+}
