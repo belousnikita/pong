@@ -15,18 +15,14 @@ class Canvas extends React.Component {
 	}
 
 	componentDidUpdate() {
-
 		const canvas = this.ref.current;
 		const ctx = setupCanvas(canvas);
 		const { bg } = this.props;
 		if (bg) {
 			bg.setContext(ctx, 'dots');
-			bg.setContext(ctx, 'paddle');
-			bg.getLayer('paddle').hide();
+			bg.setContext(ctx, 'paddles');
+			bg.getLayer('paddles').hide();
 		}
-		console.log('updater');
-		// updater();
-
 	}
 	render() {
 		const { width, height } = this.props;

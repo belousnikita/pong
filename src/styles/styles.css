@@ -5,93 +5,67 @@ html, body, .root  {
     margin: 0;
     overflow-x: hidden;
     overflow-y: hidden;
-}
 
+}
 .field {
+    margin-top: 10px;
+    margin-right: 10%;
     flex-shrink: 0;
     width: 560px;
     height: 100%;
     max-height: 800px;
     min-height: 560px;
-    border-bottom: 5px white dotted;
-    background-color: brown;
+    border: 5px white dotted;
 }
 canvas {
     position: relative;
+
     width: 100%;
     height: 100%;
 }
-.fas {
-    font-size: 2.5rem;
-}
+
 .Pong {
-    
-    display: flex;
+    display:inline-flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     width: 100%;
     height: 100%; 
+    background-image: linear-gradient(to bottom right, #6465A5,rgb(42, 161, 112));
 }
-.controls {
-    height: 20%;
-    background-color: rgb(20, 140, 196);
-    width: 560px;
-    display: flex;
-    align-items: center;
-    overflow: auto;
-    white-space: nowrap;
-    
-}
-button {
 
-    min-height: 50px;
-    width: auto;
-    background-color: rgb(20, 140, 196);
-    border: white stroke 10px;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 30px;
-    display: inline-block;
-    font-size: 16px;
-    margin: auto;
-}
-button, .left {
-   float: left;
-   margin-left: 2vw;
-}
-button, .right {
-    float: right;
-    margin-right: 2vw;
-    
- }
 @media (max-width:320px)  { 
     /* smartphones, iPhone, portrait 480x320 phones */  
       .field {
+        margin-top: 0;
+        margin-right: 0;
         width: 100%;
         min-height: auto;
         height: 85%;
-        background-color: rgb(20, 140, 196);;
+        border-left: none;
+        border-right: none;
     }
     .Pong {
         display: flex;
+        background-image: linear-gradient(to bottom, #6465A5,rgb(42, 161, 112));
     }
     .controls {
         width: 100%;
     }
 }
+
 @media (max-width:425px)  { 
     /* smartphones, iPhone, portrait 480x320 phones */  
       .field {
+        margin-top: 0;
         width: 100%;
         min-height: auto;
         height: 80%;
-        background-color: rgb(20, 140, 196);
+        border-right: none;
+        border-left: none;
     }
     .Pong {
         display: block;
+        background-image: linear-gradient(to bottom, #6465A5,rgb(42, 161, 112));
     }
     .controls {
         width: 100%;

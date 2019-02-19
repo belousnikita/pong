@@ -1,11 +1,17 @@
 export default class Paddle {
-	constructor(x, y, width, height, playerId) {
+	constructor(x, y, width, height, id) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.speed = 5;
-		this.playerId = playerId;
+		this.id = id;
+	}
+	static createPaddle(i, fieldWidth, fieldHeight, margin, height) {
+		if (i > 1) {
+			return null;
+		} else return i === 0 ? new Paddle(fieldWidth / 2, fieldHeight - margin, fieldWidth / 4, height, 'user') :
+			new Paddle(fieldWidth / 2, 0 + margin, fieldWidth / 4, height, 'computer');
 	}
 	moveRight() {
 		this.x = this.x + this.speed;
