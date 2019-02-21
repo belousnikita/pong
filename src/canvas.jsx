@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import setupCanvas from './controllers/canvasDpi';
+import setupCanvas from './helpers/canvasDpi';
 import './styles/styles.css';
 
 class Canvas extends React.Component {
