@@ -15,17 +15,18 @@ export default class Paddle {
 			new Paddle(fieldWidth / 2, 0 + margin, fieldWidth / 4, height, speed, 'computer');
 	}
 	static moveLeft() {
+		const { move } = this.state;
 		const paddle = this.state.userPaddle;
-		; if (paddle.x - paddle.width / 2 >= 0)
+		if (paddle.x - paddle.width / 2 >= 0)
 			paddle.moveLeft();
-		else this.setState({ move: false });
+		else if (move) this.setState({ move: false });
 	}
 	static moveRight() {
-		const { width } = this.state;
+		const { width, move } = this.state;
 		const paddle = this.state.userPaddle;
 		if (paddle.x + paddle.width / 2 <= width)
 			paddle.moveRight();
-		else this.setState({ move: false });
+		else if (move) this.setState({ move: false });
 	}
 	moveRight() {
 		this.x = this.x + this.speed;
