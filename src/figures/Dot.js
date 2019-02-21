@@ -8,7 +8,7 @@ const getIndexes = (iter, wCount, hCount) => {
 	return { i, j };
 };
 export default class Dot {
-	constructor(x, y, radius, color = 'rgb(255, 255, 255)') {
+	constructor(x, y, radius) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
@@ -16,26 +16,24 @@ export default class Dot {
 		this.visible = true;
 	}
 	static pointerActivity(c) {
-		const { ball, userPaddle, computerPaddle } = this.state;
-		const dist = ball.getDistance(c);
+		const { userPaddle, computerPaddle } = this.state;
 		if (userPaddle.intersectsCircle(c)
 			|| computerPaddle.intersectsCircle(c))
 			c.show();
-		else
-		if (dist - ball.radius <= 0) {
-			c.show();
-			c.setAlpha(1 - dist / ball.radius / 2);
-		} else c.hide();
-		return c;
-
+		else c.hide();
 	}
 	static waveActivity(c) {
-		const { wave } = this.state;
-		if (wave.intersectsCircle(c)) {
-			c.setAlpha(0.2);
+		const { wave, ball } = this.state;
+		const dist = ball.getDistance(c);
+		// if (wave.intersectsCircle(c)) {
+		// 	c.setAlpha(0.2);
+		// 	c.show();
+		// } else c.hide();
+		if (dist - ball.radius <= 0) {
 			c.show();
+			c.setAlpha(0.8 - dist / ball.radius / 2);
 		} else c.hide();
-		return c;
+
 	}
 	static calculateParams(radius, fieldWidth, fieldHeigth) {
 		const pureWCount = fieldWidth / (radius * 2);
