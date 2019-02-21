@@ -1,28 +1,17 @@
 import React from 'react';
-
 import ReactDOM from 'react-dom';
-
 import Background from 'bg-canvases';
-
 import Dot from './figures/Dot';
-
-import Paddle from './figures/Paddle';
-
-import Keyholder from './controllers/keyholder';
-
-import Canvas from './canvas';
-
-import Starter from './starter';
-
-import Description from './description';
-
-import Controls from './controls';
-
-import classNames from 'classnames';
-
-import './styles/styles.css';
 import Ball from './figures/Ball';
 import Wave from './figures/Wave';
+import Paddle from './figures/Paddle';
+import Keyholder from './controllers/keyholder';
+import Canvas from './canvas';
+import Starter from './starter';
+import Description from './description';
+import Controls from './controls';
+import classNames from 'classnames';
+import './styles/styles.css';
 
 class Pong extends React.Component {
 
@@ -41,9 +30,11 @@ class Pong extends React.Component {
 			wave: null,
 		};
 		this.bg = new Background();
+		this.blurredBg = new Background(); // TODO: Fix bg-canvases
 		this.keyholder = new Keyholder();
 		this.tick = this.tick.bind(this);
 		this.updateFieldDimensions = this.updateFieldDimensions.bind(this);
+		this.waveActivity = Dot.waveActivity.bind(this);
 		this.pointerActivity = Dot.pointerActivity.bind(this);
 		this.moveLeft = Paddle.moveLeft.bind(this);
 		this.moveRight = Paddle.moveRight.bind(this);
@@ -54,19 +45,38 @@ class Pong extends React.Component {
 	}
 	updateDots(width, height) {
 		const dotNetCreator = (i, params) => Dot.createNet(i, 2, params);
-
+		const blurredDotNetCreator = (i, params) => Dot.createNet(i, 4, params);
 		if (width && height) {
-			const params = Dot.calculateParams(2, width, height);
+
+			// Base dot net params
+			const baseParams = Dot.calculateParams(2, width, height);
+
+			// Blurred dot net params
+			const blurredParams = Dot.calculateParams(4, width, height);
 			// TODO: Fif bgcanvases: Cannot hide layer with no ctx; 
-			// Create blurred wave effects
+
+			//  Base dot net
 			this.bg.createLayer('dots', null,
-				(i) => dotNetCreator(i, params), params.quantity,
+				(i) => dotNetCreator(i, baseParams), baseParams.quantity,
 				(c) => this.pointerActivity(c));
+
+			// Blurred dot net TODO: Fix independent background instance, bg-canvases dont'do proper layer clearing
+			this.blurredBg.createLayer('blurredDots', null,
+				(i) => blurredDotNetCreator(i, blurredParams), blurredParams.quantity,
+				(c) => this.waveActivity(c));
+
+			// Paddles layer
 			this.bg.createLayer('paddles', null,
 				(i) => Paddle.createPaddle(i, width, height, 25, 20), 2);
+			// Ball layer
 			this.bg.createLayer('ballLayer', null,
 				() => new Ball(width / 2, height / 2, 25, 'white', 'ball'));
-			this.bg.createLayer('waveLayer', null, () => new Wave(width / 2, height / 2, 25, width / 2, 'wave'), 1, (w) => Wave.animation(w));
+			// Wave effect layer
+			this.bg.createLayer('waveLayer', null,
+				() => new Wave(width / 2, height / 2, 25, width / 3, 'wave'), 1,
+				(w) => Wave.animation(w));
+
+			// Objects
 			const paddles = this.bg.getLayer('paddles');
 			const userPaddle = paddles.getFigure('user');
 			const computerPaddle = paddles.getFigure('computer');
@@ -98,6 +108,7 @@ class Pong extends React.Component {
 		if (isStarted) {
 			this.makeMove();
 			this.bg.animate().draw();
+			this.blurredBg.animate().draw();
 		}
 		requestAnimationFrame(this.tick);
 	}
@@ -141,7 +152,7 @@ class Pong extends React.Component {
 				{!isMobile && <Description />}
 				<div className="field" id="field" ref={this.field}>
 					{!isStarted && <Starter width={width} height={height} startGame={this.startGame} />}
-					<Canvas width={width} height={height} bg={this.bg} updater={this.updateFieldDimensions} />
+					<Canvas width={width} height={height} bg={this.bg} blurredBg={this.blurredBg} updater={this.updateFieldDimensions} />
 				</div>
 				{isMobile && <Controls leftState={left} rightState={right} moveSwitcher={this.moveSwitcher} />}
 			</div >

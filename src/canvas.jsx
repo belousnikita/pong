@@ -19,12 +19,11 @@ class Canvas extends React.Component {
 		const canvas = this.ref.current;
 		const upper = this.upper.current;
 		const upperContext = upper.getContext('2d');
-		upperContext.rect(20, 20, 150, 100);
-		upperContext.stroke();
 		const ctx = setupCanvas(canvas);
-		const { bg } = this.props;
-		if (bg) {
+		const { bg, blurredBg } = this.props;
+		if (bg && blurredBg) {
 			bg.setContext(ctx, 'dots');
+			blurredBg.setContext(upperContext, 'blurredDots');
 			bg.setContext(ctx, 'paddles');
 			bg.getLayer('paddles').hide();
 			bg.setContext(ctx, 'ballLayer');
@@ -42,6 +41,7 @@ class Canvas extends React.Component {
 }
 Canvas.propTypes = {
 	bg: PropTypes.any,
+	blurredBg: PropTypes.any,
 	width: PropTypes.number,
 	height: PropTypes.number,
 	updater: PropTypes.any,
