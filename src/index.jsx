@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Background from 'bg-canvases';
-import Dot from './figures/Dot';
-import Ball from './figures/Ball';
-import Wave from './figures/Wave';
-import Paddle from './figures/Paddle';
-import Keyholder from './controllers/Keyholder';
+import Dot from './objects/Dot';
+import Ball from './objects/Ball';
+import Wave from './objects/Wave';
+import Paddle from './objects/Paddle';
+import KeypressController from './controllers/KeypressController';
+import MovementController from './controllers/MovementController';
 import Canvas from './canvas';
 import Starter from './starter';
 import Description from './description';
@@ -13,7 +14,6 @@ import Controls from './controls';
 import classNames from 'classnames';
 import './styles/styles.css';
 import GameController from './controllers/GameController';
-
 
 class Pong extends React.Component {
 
@@ -34,52 +34,57 @@ class Pong extends React.Component {
 		};
 		this.bg = new Background();
 		this.blurredBg = new Background(); // TODO: Fix bg-canvases
-		this.keyholder = new Keyholder();
+		this.staticBg = new Background();
+		this.keyholder = new KeypressController();
 		this.game = new GameController();
 		this.tick = this.tick.bind(this);
 		this.updateFieldDimensions = this.updateFieldDimensions.bind(this);
 		this.waveActivity = Dot.waveActivity.bind(this);
 		this.pointerActivity = Dot.pointerActivity.bind(this);
 		this.ballActivity = Ball.ballActivity.bind(this);
-		this.moveLeft = Paddle.moveLeft.bind(this);
-		this.moveRight = Paddle.moveRight.bind(this);
-		this.moveOnKeyPress = this.moveOnKeyPress.bind(this);
+		this.moveUserLeft = MovementController.moveUserLeft.bind(this);
+		this.moveUserRight = MovementController.moveUserRight.bind(this);
+		this.makeUserMove = MovementController.makeUserMove.bind(this);
+		this.moveComputerLeft = MovementController.moveComputerLeft.bind(this);
+		this.moveComputerRight = MovementController.moveComputerRight.bind(this);
+		this.moveOnKeyPress = KeypressController.moveOnKeyPress.bind(this);
 		this.moveSwitcher = this.moveSwitcher.bind(this);
 		this.startGame = this.startGame.bind(this);
 
 	}
 	updateDots(width, height) {
+		const blurredRadius = this.state.isMobile ? 18 : 20;
 		const dotNetCreator = (i, params) => Dot.createNet(i, 2, params);
-		const blurredDotNetCreator = (i, params) => Dot.createNet(i, 4, params);
+		const blurredDotNetCreator = (i, params) => Dot.createNet(i, blurredRadius, params);
 		if (width && height) {
 
 			// Base dot net params
 			const baseParams = Dot.calculateParams(2, width, height);
 
 			// Blurred dot net params
-			const blurredParams = Dot.calculateParams(4, width, height);
+			const blurredParams = Dot.calculateParams(blurredRadius, width, height);
 			// TODO: Fif bgcanvases: Cannot hide layer with no ctx; 
 
 			//  Base dot net
 			this.bg.createLayer('dots', null,
 				(i) => dotNetCreator(i, baseParams), baseParams.quantity,
 				(c) => this.pointerActivity(c));
-
 			// Blurred dot net TODO: Fix independent background instance, bg-canvases dont'do proper layer clearing
+			this.blurredBg.createLayer('backDots', null,
+				(i) => blurredDotNetCreator(i, blurredParams), blurredParams.quantity).applyOnEach((c) => c.setAlpha(0.08));
 			this.blurredBg.createLayer('blurredDots', null,
 				(i) => blurredDotNetCreator(i, blurredParams), blurredParams.quantity,
 				(c) => this.waveActivity(c));
-
 			// Paddles layer
 			this.bg.createLayer('paddles', null,
 				(i) => Paddle.createPaddle(i, width, height, 4, 20), 2);
 			// Ball layer
 
 			this.bg.createLayer('ballLayer', null,
-				() => new Ball(this.game, width, height, 20, 'ball'), 1, (b) => this.ballActivity(b));
+				() => new Ball(this.game, width, height, width / 50, 'ball'), 1, (b) => this.ballActivity(b));
 			// Wave effect layer
 			this.bg.createLayer('waveLayer', null,
-				() => new Wave(width / 2, height / 2, 25, width / 3, 'wave'), 1,
+				() => new Wave(width / 2, height / 2, 25, width / 5, 'wave'), 1,
 				(w) => Wave.animation(w));
 
 			// Objects
@@ -109,13 +114,15 @@ class Pong extends React.Component {
 		}
 	}
 	tick() {
-		const { isStarted, isLoosed } = this.state;
+		const { isStarted, isLoosed, computerPaddle, userPaddle } = this.state;
 		this.updateFieldDimensions();
 		if (isStarted) {
-			this.makeMove();
+			this.makeUserMove();
 			this.bg.animate().draw();
 			this.blurredBg.animate().draw();
 			this.game.tick();
+			computerPaddle.tick();
+			userPaddle.tick();
 			const status = this.game.loosed;
 			if (isLoosed !== status)
 				this.setState({ isLoosed: status });
@@ -123,26 +130,6 @@ class Pong extends React.Component {
 		requestAnimationFrame(this.tick);
 	}
 
-	moveOnKeyPress(keyCode) {
-		if (keyCode === '65' || keyCode === '37') {
-			this.moveLeft();
-			return;
-		}
-		if (keyCode === '68' || keyCode === '39') {
-			this.moveRight();
-			return;
-		}
-		return;
-	}
-	makeMove() {
-		const { left, right } = this.state;
-		if (left && right) {
-			return;
-		} else {
-			if (left) this.moveLeft();
-			if (right) this.moveRight();
-		}
-	}
 	moveSwitcher(direction, state) {
 		this.setState({ [direction]: state });
 	}
@@ -161,9 +148,13 @@ class Pong extends React.Component {
 				onKeyUp={(e) => this.keyholder.keyUp(e)}>
 				<div className={backgroundClass} />
 				{!isMobile && <Description />}
-				<div className="field" id="field" ref={this.field}>
+				<div className="field" ref={this.field}>
 					{!isStarted && <Starter width={width} height={height} startGame={this.startGame} />}
-					<Canvas width={width} height={height} bg={this.bg} blurredBg={this.blurredBg} updater={this.updateFieldDimensions} />
+					<Canvas width={width}
+						height={height}
+						bg={this.bg}
+						blurredBg={this.blurredBg}
+						updater={this.updateFieldDimensions} />
 				</div>
 				{isMobile && <Controls leftState={left} rightState={right} moveSwitcher={this.moveSwitcher} />}
 			</div >
