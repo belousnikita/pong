@@ -51,7 +51,9 @@ class Pong extends React.Component {
 		this.moveSwitcher = this.moveSwitcher.bind(this);
 		this.startGame = this.startGame.bind(this);
 
+
 	}
+
 	updateDots(width, height) {
 		const blurredRadius = this.state.isMobile ? 18 : 20;
 		const dotNetCreator = (i, params) => Dot.createNet(i, 2, params);

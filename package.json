@@ -7,7 +7,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/chern0us/pong/issues"
   },
-  "homepage": "https://github.com/chern0us/pong#readme",
+  "homepage": "https://chern0us.github.io/pong/",
   "dependencies": {
     "bg-canvases": "^1.1.11",
     "classnames": "^2.2.6",
@@ -39,6 +41,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "eslint-plugin-react": "^7.12.4"
+    "eslint-plugin-react": "^7.12.4",
+    "gh-pages": "^2.0.1"
   }
 }
