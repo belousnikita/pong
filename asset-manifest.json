@@ -1,0 +1,13 @@
+{
+  "main.css": "/pong/static/css/main.50d8a434.chunk.css",
+  "main.js": "/pong/static/js/main.a250a21f.chunk.js",
+  "main.js.map": "/pong/static/js/main.a250a21f.chunk.js.map",
+  "runtime~main.js": "/pong/static/js/runtime~main.7c66ac21.js",
+  "runtime~main.js.map": "/pong/static/js/runtime~main.7c66ac21.js.map",
+  "static/js/2.ee01ede3.chunk.js": "/pong/static/js/2.ee01ede3.chunk.js",
+  "static/js/2.ee01ede3.chunk.js.map": "/pong/static/js/2.ee01ede3.chunk.js.map",
+  "index.html": "/pong/index.html",
+  "precache-manifest.346ab6efb0f64d2de521fc93344ad7bc.js": "/pong/precache-manifest.346ab6efb0f64d2de521fc93344ad7bc.js",
+  "service-worker.js": "/pong/service-worker.js",
+  "static/css/main.50d8a434.chunk.css.map": "/pong/static/css/main.50d8a434.chunk.css.map"
+}
