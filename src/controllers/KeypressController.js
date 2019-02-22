@@ -15,4 +15,15 @@ export default class Keyholder {
 			func(keycode);
 		}
 	}
+	static moveOnKeyPress(keyCode) {
+		if (keyCode === '65' || keyCode === '37') {
+			this.moveUserLeft();
+			return;
+		}
+		if (keyCode === '68' || keyCode === '39') {
+			this.moveUserRight();
+			return;
+		}
+		return;
+	}
 }
