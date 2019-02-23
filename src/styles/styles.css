@@ -63,7 +63,7 @@ canvas {
     top: 0px;
     right: 0px;
     bottom: 0px;
-    background-image: linear-gradient(to bottom right, #6465A5,rgb(126, 110, 216));
+    background-image: linear-gradient(to bottom right, #6465A5,rgb(13, 63, 92));
     opacity: 0;
     transition: all 3s ease-in-out;
 }
@@ -96,7 +96,7 @@ canvas {
         background-image: linear-gradient(to bottom, #6465A5,rgb(42, 161, 112));
     }
     .background::after {
-        background-image: linear-gradient(to bottom, #6465A5,rgb(24, 140, 207));
+        background-image: linear-gradient(to bottom, #6465A5,rgb(13, 63, 92));
     }
 }
 
@@ -124,6 +124,6 @@ canvas {
         background-image: linear-gradient(to bottom, #6465A5,rgb(42, 161, 112));
     }
     .background::after {
-        background-image: linear-gradient(to bottom, #6465A5,rgb(24, 140, 207));
+        background-image: linear-gradient(to bottom, #6465A5,rgb(13, 63, 92));
     }
 }

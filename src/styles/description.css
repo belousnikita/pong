@@ -11,6 +11,7 @@
     z-index: 1;
 
 }
+
 .header {
     font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
     text-align: center;
@@ -38,6 +39,25 @@
     color: white;
     font-size: 1em;
 }
+.scores {
+    display: block;
+    position: relative;
+    left: 32rem;
+    justify-self: flex-end;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 1;
+}
+.scoredigit {
+    font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+    font-weight: 900;
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+    vertical-align: middle;
+}
 .fas {
     font-size: 1em;
 }
@@ -46,7 +66,6 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    
 }
 .start {
      cursor: pointer;
@@ -54,4 +73,25 @@
 }
 .start:hover {
     font-size: 3.5rem;
+}
+@media (max-width:320px)  { 
+    /* smartphones, iPhone, portrait 480x320 phones */  
+    .scores {
+        left: 0;
+    }
+    .scoredigit {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width:425px)  { 
+    /* smartphones, iPhone, portrait 480x320 phones */  
+    .scores {
+        left: 0;
+    }
+    .scoredigit {
+        margin: 0;
+        font-size: 1.5rem;
+    }
 }

@@ -7,13 +7,14 @@ import Wave from './objects/Wave';
 import Paddle from './objects/Paddle';
 import KeypressController from './controllers/KeypressController';
 import MovementController from './controllers/MovementController';
+import GameController from './controllers/GameController';
 import Canvas from './canvas';
 import Starter from './starter';
 import Description from './description';
 import Controls from './controls';
 import classNames from 'classnames';
 import './styles/styles.css';
-import GameController from './controllers/GameController';
+import Scores from './scores';
 
 class Pong extends React.Component {
 
@@ -25,12 +26,12 @@ class Pong extends React.Component {
 			height: 0,
 			move: false,
 			isMobile: false,
-			isStarted: false,
-			isLoosed: false,
 			userPaddle: null,
 			computerPaddle: null,
 			ball: null,
 			wave: null,
+			userScore: 0,
+			computerScore: 0,
 		};
 		this.bg = new Background();
 		this.blurredBg = new Background(); // TODO: Fix bg-canvases
@@ -50,8 +51,6 @@ class Pong extends React.Component {
 		this.moveOnKeyPress = KeypressController.moveOnKeyPress.bind(this);
 		this.moveSwitcher = this.moveSwitcher.bind(this);
 		this.startGame = this.startGame.bind(this);
-
-
 	}
 
 	updateDots(width, height) {
@@ -98,10 +97,16 @@ class Pong extends React.Component {
 			this.setState({ userPaddle, computerPaddle, ball, wave });
 		}
 	}
+	updateScore(userScoreUpdated, computerScoreUpdated) {
+		const { userScore, computerScore } = this.state;
+		if (userScoreUpdated !== userScore || computerScoreUpdated !== computerScore)
+			this.setState({ userScore: userScoreUpdated, computerScore: computerScoreUpdated });
+	}
 	componentDidMount() {
 		setInterval(() => this.keyholder.holdEvents(this.moveOnKeyPress), 20);
 		this.updateFieldDimensions();
 		this.updateDots();
+		this.setState({ score: this.game.score });
 		requestAnimationFrame(this.tick);
 	}
 	updateFieldDimensions() {
@@ -116,7 +121,9 @@ class Pong extends React.Component {
 		}
 	}
 	tick() {
-		const { isStarted, isLoosed, computerPaddle, userPaddle } = this.state;
+		const { computerPaddle, userPaddle, isStarted } = this.state;
+		const { score } = this.game;
+		this.updateScore(score.userScore, score.computerScore);
 		this.updateFieldDimensions();
 		if (isStarted) {
 			this.makeUserMove();
@@ -125,9 +132,6 @@ class Pong extends React.Component {
 			this.game.tick();
 			computerPaddle.tick();
 			userPaddle.tick();
-			const status = this.game.loosed;
-			if (isLoosed !== status)
-				this.setState({ isLoosed: status });
 		}
 		requestAnimationFrame(this.tick);
 	}
@@ -137,19 +141,20 @@ class Pong extends React.Component {
 	}
 
 	startGame() {
+		this.game.start();
 		this.setState({ isStarted: true });
 	}
 	render() {
-		const { width, height, left, right, isMobile, isStarted, isLoosed } = this.state;
+		const { width, height, left, right, isMobile, userScore, computerScore, isStarted } = this.state;
 		const backgroundClass = classNames('background', {
-			started: isStarted && !isLoosed,
-			loosed: isLoosed
+			started: isStarted
 		});
 		return (
 			<div className="pong" tabIndex="0" onKeyDown={(e) => this.keyholder.keyDown(e)}
 				onKeyUp={(e) => this.keyholder.keyUp(e)}>
 				<div className={backgroundClass} />
 				{!isMobile && <Description />}
+				{!isMobile && <Scores userScore={userScore} computerScore={computerScore} />}
 				<div className="field" ref={this.field}>
 					{!isStarted && <Starter width={width} height={height} startGame={this.startGame} />}
 					<Canvas width={width}
@@ -158,7 +163,9 @@ class Pong extends React.Component {
 						blurredBg={this.blurredBg}
 						updater={this.updateFieldDimensions} />
 				</div>
-				{isMobile && <Controls leftState={left} rightState={right} moveSwitcher={this.moveSwitcher} />}
+				{isMobile && <Controls leftState={left} rightState={right} moveSwitcher={this.moveSwitcher}>
+					<Scores userScore={userScore} computerScore={computerScore} />
+				</Controls>}
 			</div >
 		);
 	}

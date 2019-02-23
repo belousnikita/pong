@@ -17,6 +17,7 @@ export default class Controls extends React.Component {
 				onMouseUp={() => moveSwitcher('left', false)}
 				onTouchEnd={() => moveSwitcher('left', false)}><i className="fas fa-arrow-left"></i>
 			</button>
+			{this.props.children}
 			<button type="button" className={rightClass}
 				onTouchStart={() => moveSwitcher('right', true)}
 				onTouchMove={() => moveSwitcher('right', true)}
@@ -31,5 +32,6 @@ export default class Controls extends React.Component {
 Controls.propTypes = {
 	leftState: PropTypes.bool,
 	rightState: PropTypes.bool,
-	moveSwitcher: PropTypes.func
+	moveSwitcher: PropTypes.func,
+	children: PropTypes.node.isRequired
 };
