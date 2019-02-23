@@ -12,8 +12,8 @@ export default class Paddle {
 		const speed = fieldHeight * fieldWidth / 30000;
 		if (i > 1) {
 			return null;
-		} else return i === 0 ? new Paddle(fieldWidth / 2, fieldHeight - margin, fieldWidth / 4, height, speed, 'user') :
-			new Paddle(fieldWidth / 2, 0 + margin, fieldWidth / 4, height, speed, 'computer');
+		} else return i === 0 ? new Paddle(fieldWidth / 2, fieldHeight - margin, fieldWidth / 4.5, height, speed, 'user') :
+			new Paddle(fieldWidth / 2, 0 + margin, fieldWidth / 4.5, height, speed, 'computer');
 	}
 
 	moveRight() {
